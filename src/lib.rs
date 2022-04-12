@@ -11,7 +11,7 @@ mod tests {
 #[macro_use] extern crate text_io;
 use std::{thread, time};
 use std::str;
-use std::{io, process::exit};
+use std::process::exit;
 use console::Style;
 
 // ----------------- Help ---------------------------------
@@ -56,23 +56,32 @@ pub fn new_system(name:String) -> System{
 
 impl System {
        
+    pub fn program_menu(&self) -> i32{
+        let mut i: i16 = 0;
+        for p in &self.programs {
+            println!("{}t/{}",i ,p.name);
+            i+=1;
+        }
+
+        input().parse::<i32>().unwrap_or(-1)
+    }
 
     pub fn sys(&mut self, s: &str){
         println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String){
-        self.programs.push(new_program(name));
+    pub fn add_program(&mut self, name: String, sleep: Option<u64>){
+        
+        self.programs.push(new_program(name, sleep.unwrap_or(self.sleep)));
+        
     }
-
-
 
 }
 
 
-fn new_program(name: String) -> Program {
-    Program { name, style: Style::new().green() }
+fn new_program(name: String, sleep: u64) -> Program {
+    Program { name, style: Style::new().green(), sleep }
 }
 
 // --------------------- Program (private) -------------------------
@@ -81,17 +90,27 @@ fn new_program(name: String) -> Program {
 struct Program {
     name: String,
     style: Style,
+    sleep: u64,
 }
 
 impl Program {
-    
+
+
+    fn prog(&self,s: String) {
+        println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
+        thread::sleep(time::Duration::from_millis(self.sleep));
+    }
+
+    fn err_msg(&self, s: String){
+        println!("{}", Style::new().cyan().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
+    }    
 }
 
 
 // ------------------------- Error -----------------------------
 
 pub fn err_msg(s: &str){
-    println!("{}", Style::new().cyan().apply_to("Error> ".to_string()+&s.to_string()));
+    println!("{}", Style::new().red().apply_to("Error> ".to_string()+&s.to_string()));
 }
 
 pub fn err(){
