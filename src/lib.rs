@@ -15,7 +15,9 @@ use std::process::exit;
 use console::Style;
 
 // ----------------- Help ---------------------------------
-
+// -- The help struct is used for making a costum help command for the progran.
+// -- The help is constructed of a Style and the content. 
+// TODO The color of the text will be costumicable, by default is is cyan.
 pub struct Help {
     style: Style,
     content: str,
@@ -36,6 +38,9 @@ impl Help {
 
 
 //--------------------- System -----------------------------------------
+// -- The system is the main print that is intended to be used as the "hub"
+// -- THe main menu and navigating between the programs. 
+// -- All programs are in a list within the system struct.
 
 pub struct System {
     name: String,
@@ -108,6 +113,7 @@ impl Program {
 
 
 // ------------------------- Error -----------------------------
+// Standardisation for error messages. These will not be costumizable.
 
 pub fn err_msg(s: &str){
     println!("{}", Style::new().red().apply_to("Error> ".to_string()+&s.to_string()));
@@ -118,6 +124,9 @@ pub fn err(){
 }
 
 // -------------------------- Input --------------------------------
+// A function that askes the user to input a line, the string will then be returned.
+// TODO The color will be costumisable, and by default it will be the Systems, 
+// and it can be changed to be a given program
 
 pub fn input() -> String{
     let style: Style = Style::new().yellow();
