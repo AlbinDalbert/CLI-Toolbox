@@ -14,6 +14,30 @@ use std::str;
 use std::process::exit;
 use console::Style;
 
+enum TermColors{
+    Black,
+    Red,
+    Green,
+    Yellow,
+    Blue,
+    Magenta,
+    Cyan,
+    White,
+}
+
+fn set_style_color(style: Style, color: TermColors) -> Style{
+    match color {
+        TermColors::Black => style.black(),
+        TermColors::Red => style.red(),
+        TermColors::Green => style.green(),
+        TermColors::Yellow => style.yellow(),
+        TermColors::Blue => style.blue(),
+        TermColors::Magenta => style.magenta(),
+        TermColors::Cyan => style.cyan(),
+        TermColors::White => style.white(),
+    }
+}
+
 // ----------------- Help ---------------------------------
 // -- The help struct is used for making a costum help command for the progran.
 // -- The help is constructed of a Style and the content. 
