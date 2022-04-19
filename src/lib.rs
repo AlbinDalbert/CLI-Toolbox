@@ -14,7 +14,10 @@ use std::str;
 use std::process::exit;
 use console::Style;
 
-enum TermColors{
+/// enum used in the function set_style_color() to check validity of input
+
+#[derive(Clone, Copy)]
+pub enum TermColor{
     Black,
     Red,
     Green,
@@ -25,36 +28,44 @@ enum TermColors{
     White,
 }
 
-fn set_style_color(style: Style, color: TermColors) -> Style{
+fn set_color(style: Style, color: TermColor) -> Style{
     match color {
-        TermColors::Black => style.black(),
-        TermColors::Red => style.red(),
-        TermColors::Green => style.green(),
-        TermColors::Yellow => style.yellow(),
-        TermColors::Blue => style.blue(),
-        TermColors::Magenta => style.magenta(),
-        TermColors::Cyan => style.cyan(),
-        TermColors::White => style.white(),
+        TermColor::Black => style.black(),
+        TermColor::Red => style.red(),
+        TermColor::Green => style.green(),
+        TermColor::Yellow => style.yellow(),
+        TermColor::Blue => style.blue(),
+        TermColor::Magenta => style.magenta(),
+        TermColor::Cyan => style.cyan(),
+        TermColor::White => style.white(),
     }
 }
 
+
 // ----------------- Help ---------------------------------
-// -- The help struct is used for making a costum help command for the progran.
-// -- The help is constructed of a Style and the content. 
-// TODO The color of the text will be costumicable, by default it is cyan.
+/// The help struct is used for making a costum help command for the progran.
+/// The help is constructed of a Style and the content. 
+/// The color of the text is customizable from the enum TermColor, default is cyan.
 pub struct Help {
     style: Style,
-    content: str,
+    content: String,
+}
+
+pub fn new_help(color: Option<TermColor>) -> Help{
+    
+    let mut help = Help {
+        style: Style::new(),
+        content: "Default help content".to_string(),
+    };
+
+    help.style = set_color(help.style, color.unwrap_or(TermColor::Cyan));
+    help
 }
 
 impl Help {
 
-    pub fn new(&mut self){
-        self.style = Style::new().cyan();
-    }
-
-
     pub fn help(&self) {
+        println!("{}", self.style.apply_to("/t---/t---Help---/t---/n"));
         println!("{}", self.style.apply_to(&self.content));
     }   
     
@@ -68,20 +79,25 @@ impl Help {
 
 pub struct System {
     name: String,
+    color: TermColor,
     style: Style,
     sleep: u64,
     programs: Vec<Program>, 
 }
 
-// TODO add optional color for the system, green is default
-pub fn new_system(name:String) -> System{
 
-    System {
-        name, 
-        style: Style::new().green(), 
+pub fn new_system(name:String, color: Option<TermColor>) -> System{
+
+    let mut system = System {
+        name,
+        color: color.unwrap_or(TermColor::Green), 
+        style: Style::new(), 
         sleep: 0, 
         programs: Vec::new()
-    }
+    };
+
+    system.style = set_color(system.style, color.unwrap_or(TermColor::Green));
+    system
 }
 
 impl System {
@@ -89,7 +105,7 @@ impl System {
     pub fn program_menu(&self) -> i32{
         let mut i: i16 = 0;
         for p in &self.programs {
-            println!("{}t/{}",i ,p.name);
+            println!("{}t/==t/{}",i ,p.name);
             i+=1;
         }
 
@@ -103,15 +119,22 @@ impl System {
 
     pub fn add_program(&mut self, name: String, sleep: Option<u64>){
         
-        self.programs.push(new_program(name, sleep.unwrap_or(self.sleep)));
+        self.programs.push(new_program(name, Some(self.color) ,sleep.unwrap_or(self.sleep)));
         
     }
 
 }
 
-// TODO add optional color, default is green, or inherited by it's parent 'System' if it has one.
-pub fn new_program(name: String, sleep: u64) -> Program {
-    Program { name, style: Style::new().green(), sleep }
+
+pub fn new_program(name: String, color: Option<TermColor> ,sleep: u64) -> Program {
+    let mut program = Program { 
+        name, 
+        style: Style::new(), 
+        sleep 
+    };
+
+    program.style = set_color(program.style, color.unwrap_or(TermColor::Green));
+    program
 }
 
 // --------------------- Program (private) -------------------------
@@ -123,9 +146,8 @@ pub struct Program {
     sleep: u64,
 }
 
-// TODO add function for changing color
+// changing colors after initialisation removed as it's unneceseary.
 impl Program {
-
 
     pub fn prog(&self,s: String) {
         println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
@@ -135,6 +157,7 @@ impl Program {
     pub fn err_msg(&self, s: String){
         println!("{}", Style::new().cyan().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
     }    
+
 }
 
 
@@ -151,8 +174,9 @@ pub fn err(){
 
 // -------------------------- Input --------------------------------
 // A function that askes the user to input a line, the string will then be returned.
-// TODO The color will be costumisable, and by default it will be the Systems, 
-// and it can be changed to be a given program
+// TODO The color will be costumisable, and by default it will be yellow, 
+// TODO make a struct for input so it can be handled accordingly.
+// and it can be changed to be a given program.
 
 pub fn input() -> String{
     let style: Style = Style::new().yellow();
