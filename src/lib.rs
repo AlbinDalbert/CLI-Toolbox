@@ -17,7 +17,7 @@ use console::Style;
 // ----------------- Help ---------------------------------
 // -- The help struct is used for making a costum help command for the progran.
 // -- The help is constructed of a Style and the content. 
-// TODO The color of the text will be costumicable, by default is is cyan.
+// TODO The color of the text will be costumicable, by default it is cyan.
 pub struct Help {
     style: Style,
     content: str,
@@ -49,6 +49,7 @@ pub struct System {
     programs: Vec<Program>, 
 }
 
+// TODO add optional color for the system, green is default
 pub fn new_system(name:String) -> System{
 
     System {
@@ -84,29 +85,30 @@ impl System {
 
 }
 
-
-fn new_program(name: String, sleep: u64) -> Program {
+// TODO add optional color, default is green, or inherited by it's parent 'System' if it has one.
+pub fn new_program(name: String, sleep: u64) -> Program {
     Program { name, style: Style::new().green(), sleep }
 }
 
 // --------------------- Program (private) -------------------------
 // ----- programs are handled through the 'System' ------
 
-struct Program {
+pub struct Program {
     name: String,
     style: Style,
     sleep: u64,
 }
 
+// TODO add function for changing color
 impl Program {
 
 
-    fn prog(&self,s: String) {
+    pub fn prog(&self,s: String) {
         println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    fn err_msg(&self, s: String){
+    pub fn err_msg(&self, s: String){
         println!("{}", Style::new().cyan().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
     }    
 }
@@ -133,6 +135,11 @@ pub fn input() -> String{
     println!("{}", style.apply_to("listening> "));
     let s: String = read!("{}\n");
     println!("{}", style.apply_to("input> ".to_owned()+&s.to_string()));
+
+    if s.eq("quit"){
+        quit();
+        return s;
+    }
     s
 }
 
