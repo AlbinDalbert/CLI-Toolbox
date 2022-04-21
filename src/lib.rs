@@ -1,4 +1,12 @@
 #![allow(dead_code)]
+// FIXME seperated the code into modules in different files.
+// have not checked on analised the visability between them yet.
+pub mod input;
+pub mod help;
+pub mod system;
+pub mod program;
+
+
 #[cfg(test)]
 mod tests {
     #[test]
