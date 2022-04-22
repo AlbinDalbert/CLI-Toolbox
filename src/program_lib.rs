@@ -7,7 +7,7 @@ pub mod program {
     use console::Style;
     
     pub struct Program {
-        name: String,
+        pub name: String,
         style: Style,
         sleep: u64,
     }
@@ -24,6 +24,18 @@ pub mod program {
             println!("{}", Style::new().cyan().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
         }    
 
+    }
+
+    //create new program
+    pub fn new_program(name: String, color: Option<crate::TermColor>, sleep: u64) -> Program{
+        let mut program = Program {
+            name,
+            style: Style::new(),
+            sleep,
+        };
+
+        program.style = crate::set_color(program.style, color.unwrap_or(crate::TermColor::Green));
+        program
     }
 
 }

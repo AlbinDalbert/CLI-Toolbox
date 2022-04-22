@@ -1,6 +1,6 @@
 [package]
 name = "term_tools"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 text_io = "0.1.10"
 console = "0.15.0"
+dialoguer = "0.10.0"

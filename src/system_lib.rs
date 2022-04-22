@@ -9,9 +9,8 @@ pub mod system {
     use std::str;
     use console::Style;
 
-    use crate::{TermColor, Program, input};
-
-
+    use crate::*;
+    use crate::{TermColor, program_lib::program::*};
     
     pub struct System {
         name: String,
@@ -55,7 +54,7 @@ pub mod system {
 
         pub fn add_program(&mut self, name: String, sleep: Option<u64>){
             
-            self.programs.push(crate::new_program(name, Some(self.color) ,sleep.unwrap_or(self.sleep)));
+            self.programs.push(new_program(name, Some(self.color) ,sleep.unwrap_or(self.sleep)));
             
         }
 
