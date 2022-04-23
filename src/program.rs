@@ -8,8 +8,10 @@
 use std::{thread, time};
 use console::Style;
 
+#[derive(Clone)]
 pub struct Program {
     pub name: String,
+    runfn: fn(&mut Program) -> (),
     style: Style,
     sleep: u64,
 }
@@ -23,15 +25,20 @@ impl Program {
     }
 
     pub fn err_msg(&self, s: String){
-        println!("{}", Style::new().cyan().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
-    }    
+        println!("{}", Style::new().red().apply_to(self.name.to_string()+" Error> "+&s.to_string()));    
+    }
+    
+    pub fn run(&self){
+        (self.runfn);
+    }
 
 }
 
 //create new program
-pub fn new_program(name: String, color: Option<crate::TermColor>, sleep: u64) -> Program{
+pub fn new_program(name: String, runfn:fn(&mut Program) ,color: Option<crate::TermColor>, sleep: u64) -> Program{
     let mut program = Program {
         name,
+        runfn,
         style: Style::new(),
         sleep,
     };

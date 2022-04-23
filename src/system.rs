@@ -35,14 +35,19 @@ pub fn new_system(name:String, color: Option<TermColor>) -> System{
 
 impl System {
     
-    pub fn program_menu(&self) -> i32{
+    pub fn program_menu(&self) -> Program{
         let mut i: i16 = 0;
         for p in &self.programs {
-            println!("{}t/==t/{}",i ,p.name);
+
+            println!("{0: <10}) {1: <100}",
+            self.style.apply_to(i) ,
+            self.style.apply_to(p.name.clone()));
+
             i+=1;
         }
 
-        input().parse::<i32>().unwrap_or(-1)
+        let inp = input().parse::<i32>().unwrap_or(-1);
+        self.programs[inp as usize].clone()
     }
 
     pub fn sys(&mut self, s: &str){
@@ -50,10 +55,15 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String, sleep: Option<u64>){
+    pub fn add_program(&mut self, name: String, runfn:fn(&mut Program), sleep: Option<u64>){
         
-        self.programs.push(new_program(name, Some(self.color) ,sleep.unwrap_or(self.sleep)));
+        self.programs.push(new_program(name, runfn ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
         
+    }
+
+    pub fn run_program(&mut self, program: Program){
+        let p = program;
+        p.run();
     }
 
 }
