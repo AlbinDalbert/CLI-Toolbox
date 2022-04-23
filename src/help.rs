@@ -7,23 +7,24 @@ pub mod help {
     use console::Style;
 
     use crate::TermColor;
+
     pub struct Help {
         style: Style,
         content: String,
     }
 
-    pub fn new_help(color: Option<TermColor>) -> Help{
-        
-        let mut help = Help {
-            style: Style::new(),
-            content: "Default help content".to_string(),
-        };
-
-        help.style = crate::set_color(help.style, color.unwrap_or(TermColor::Cyan));
-        help
-    }
-
     impl Help {
+
+        pub fn new(color: Option<TermColor>) -> Help{
+        
+            let mut help = Help {
+                style: Style::new(),
+                content: "Default help content".to_string(),
+            };
+    
+            help.style = crate::set_color(help.style, color.unwrap_or(TermColor::Cyan));
+            help
+        }
 
         pub fn help(&self) {
             println!("{}", self.style.apply_to("/t---/t---Help---/t---/n"));

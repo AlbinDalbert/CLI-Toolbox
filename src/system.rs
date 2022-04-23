@@ -19,21 +19,22 @@ pub struct System {
 }
 
 
-pub fn new_system(name:String, color: Option<TermColor>) -> System{
-
-    let mut system = System {
-        name,
-        color: color.unwrap_or(TermColor::Green), 
-        style: Style::new(), 
-        sleep: 0, 
-        programs: Vec::new()
-    };
-
-    system.style = crate::set_color(system.style, color.unwrap_or(TermColor::Green));
-    system
-}
 
 impl System {
+
+    pub fn new(name:String, color: Option<TermColor>, sleep: Option<u64>) -> System{
+
+        let mut system = System {
+            name,
+            color: color.unwrap_or(TermColor::Green), 
+            style: Style::new(), 
+            sleep: sleep.unwrap_or(100), 
+            programs: Vec::new()
+        };
+    
+        system.style = crate::set_color(system.style, color.unwrap_or(TermColor::Green));
+        system
+    }
     
     pub fn program_menu(&self) -> Program{
         let mut i: i16 = 0;
@@ -55,9 +56,9 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String, runfn:fn(&mut Program), sleep: Option<u64>){
+    pub fn add_program(&mut self, name: String, run_func:fn(&mut Program), sleep: Option<u64>){
         
-        self.programs.push(new_program(name, runfn ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
+        self.programs.push(Program::new(name, run_func ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
         
     }
 
@@ -65,5 +66,4 @@ impl System {
         let p = program;
         p.run();
     }
-
 }
