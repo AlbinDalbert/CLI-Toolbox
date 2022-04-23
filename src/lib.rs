@@ -1,13 +1,11 @@
 #![allow(dead_code)]
-// FIXME seperated the code into modules in different files.
-// have not checked on analised the visability between them yet.
+
+/// Author (Github) : AlbinDalbert
+
 pub mod help;
-pub mod system_lib;
-pub mod program_lib;
-pub mod test;
-pub mod menu;
-
-
+pub mod system;
+pub mod program;
+// pub mod menu;
 
 #[macro_use] extern crate text_io;
 use std::{thread, time};

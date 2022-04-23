@@ -7,8 +7,6 @@ pub mod help {
     use console::Style;
 
     use crate::TermColor;
-
-
     pub struct Help {
         style: Style,
         content: String,
