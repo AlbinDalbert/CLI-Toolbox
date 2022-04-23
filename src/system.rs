@@ -18,8 +18,6 @@ pub struct System {
     programs: Vec<Program>, 
 }
 
-
-
 impl System {
 
     pub fn new(name:String, color: Option<TermColor>, sleep: Option<u64>) -> System{
@@ -36,7 +34,7 @@ impl System {
         system
     }
     
-    pub fn program_menu(&self) -> Program{
+    pub fn menu(&self) -> Program{
         let mut i: i16 = 0;
         for p in &self.programs {
 
@@ -51,7 +49,7 @@ impl System {
         self.programs[inp as usize].clone()
     }
 
-    pub fn sys(&mut self, s: &str){
+    pub fn print(&mut self, s: &str){
         println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
@@ -65,5 +63,9 @@ impl System {
     pub fn run_program(&mut self, program: Program){
         let p = program;
         p.run();
+    }
+
+    pub fn err(&self, s: Option<&String>){
+        println!("{}", Style::new().red().apply_to(self.name.to_string()+&"Error> ".to_string()+s.unwrap_or(&"Error".to_string())));
     }
 }

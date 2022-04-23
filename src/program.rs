@@ -13,7 +13,7 @@ pub struct Program {
     sleep: u64,
 }
 
-// changing colors after initialisation removed as it's unneceseary.
+// changing colors after initialization removed as it's unnecessary.
 impl Program {
 
     //create new program
@@ -29,7 +29,7 @@ impl Program {
         program
     }
 
-    pub fn prog(&self,s: String) {
+    pub fn print(&self,s: String) {
         println!("{}", self.style.apply_to(self.name.to_string()+&"> ".to_string()+&s.to_string()));
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
@@ -42,5 +42,8 @@ impl Program {
         (self.run_func);
     }
 
+    pub fn err(&self, s: Option<&String>){
+        println!("{}", Style::new().red().apply_to(self.name.to_string()+&"Error> ".to_string()+s.unwrap_or(&"Error".to_string())));
+    }
 }
 

@@ -61,13 +61,9 @@ pub fn input() -> String{
 
 
 // ------------------------- Error -----------------------------
-/// Standardisation for error messages. These will not be costumizable.
-pub fn err_msg(s: &str){
-    println!("{}", Style::new().red().apply_to("Error> ".to_string()+&s.to_string()));
-}
-
-pub fn err(){
-    println!("{}", Style::new().red().apply_to("Error> Error".to_string()));
+/// Standardization for error messages. These will not be customizable.
+pub fn err(s: Option<&String>){
+    println!("{}", Style::new().red().apply_to("Error> ".to_string()+s.unwrap_or(&"Error".to_string())));
 }
 
 // ---------------------------- Quit -----------------------------------
