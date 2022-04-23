@@ -1,9 +1,6 @@
-
 // --------------------- Program -------------------------------------------------
 /// Language: rust
 /// Path: src\program_lib.rs
-
-
 
 use std::{thread, time};
 use console::Style;
