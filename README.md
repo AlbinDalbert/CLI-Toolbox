@@ -8,7 +8,7 @@ A way to make the text and color for the prints to make sense for the particular
 
 ## Use It
 To use this crate. Under the dependencies in your Cargo.toml, just add this crate as followed
-`term_tools = { git = "https://github.com/AlbinDalbert/TermTools.git" }`
+```term_tools = { git = "https://github.com/AlbinDalbert/TermTools.git" }```
 Then just update your cargo the everything is up and running.
 
 ## Road-map
