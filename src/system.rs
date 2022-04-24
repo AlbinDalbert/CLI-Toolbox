@@ -45,8 +45,8 @@ impl System {
 
             i+=1;
         }
-        i
-        //let inp = input("Pick program to launch:").parse::<usize>().unwrap();
+        
+        input("Pick program to launch:").parse::<usize>().unwrap()
         // self.programs[inp].clone()
     }
 
