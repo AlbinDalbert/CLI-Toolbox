@@ -21,8 +21,9 @@ This is still in a very early stage, a lot of things have not been implemented a
 ### Core Functions
 - [x]    Customizable for each instance of a `System` and `Program`
 - [x]    Program inherits optional attributes from `System` by default
-- [ ]    Programs can be executed via the `run()` function, (e.g. They are fundamentally linked together, not just for looks)
+- [x]    Programs can be executed via the `run()` function, (e.g. They are fundamentally linked together, not just for looks)
 - [x]    Change the cargo name to something better and more telling
+- [ ]    Make a generic `Menu` where each item has a `name` and `action`(function)
 
 ### Optional Steps
 - [ ]   System can have sub-system
