@@ -17,7 +17,7 @@ pub struct Program {
 impl Program {
 
     //create new program
-    pub fn new(name: String, run_func:fn() ,color: Option<crate::TermColor>, sleep: u64) -> Program{
+    pub fn new(name: String, run_func: fn() ,color: Option<crate::TermColor>, sleep: u64) -> Program{
         let mut program = Program {
             name,
             run_func,
