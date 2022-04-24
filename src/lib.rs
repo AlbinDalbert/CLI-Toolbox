@@ -61,9 +61,9 @@ fn set_color(style: Style, color: TermColor) -> Style{
 // TODO make a struct for input so it can be handled accordingly.
 // and it can be changed to be a given program.
 
-pub fn input() -> String{
+pub fn input(label: &str) -> String{
     let style: Style = Style::new().yellow();
-    println!("{}", style.apply_to("listening> "));
+    println!("{}", style.apply_to(label));
     let s: String = read!("{}\n");
     println!("{}", style.apply_to("input> ".to_owned()+&s.to_string()));
     

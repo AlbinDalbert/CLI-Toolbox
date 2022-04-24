@@ -46,7 +46,7 @@ impl System {
             i+=1;
         }
 
-        let inp = input().parse::<i32>().unwrap_or(-1);
+        let inp = input("Pick program to launch").parse::<i32>().unwrap_or(-1);
         self.programs[inp as usize].clone()
     }
 

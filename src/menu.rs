@@ -26,7 +26,7 @@ impl Menu {
             i += 1;
         }
 
-        let inp = input().parse::<i32>().unwrap_or(-1);
+        let inp = input("What to launch:").parse::<i32>().unwrap_or(-1);
         self.items[inp as usize].1();
     }
 }
