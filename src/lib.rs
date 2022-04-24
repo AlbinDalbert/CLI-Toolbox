@@ -65,7 +65,7 @@ pub fn input(label: &str) -> String{
     println!("{}", style.apply_to(label));
     let s: String = read!("{}\n");
     println!("{}", style.apply_to("input> ".to_owned()+&s.to_string()));
-    //let s = s.replace('\n', "");
+    let s = s.replace('\n', "");
     
     if s.eq("quit"){
         quit();
