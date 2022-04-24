@@ -1,4 +1,4 @@
-# TermTools
+# Terminal Toolbox
 Tools for making a simple and good looking terminal interface.
 Design primarily for programs with multiple sub-programs.
 
@@ -11,7 +11,7 @@ Working more as a Map.
 ## Include It
 To use this crate. Under the dependencies in your Cargo.toml, just add this crate as followed
 
-```term_tools = { git = "https://github.com/AlbinDalbert/TermTools.git" }```
+```term_tools = { git = "https://github.com/AlbinDalbert/terminal_toolbox.git" }```
 
 Then just update your cargo the everything is up and running.
 
