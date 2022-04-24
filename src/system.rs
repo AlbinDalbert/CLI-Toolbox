@@ -39,8 +39,8 @@ impl System {
         let mut i: i16 = 0;
         for p in &self.programs {
 
-            println!("{0): <10} {1: <100}",
-            self.style.apply_to(i) ,
+            println!("{0: <10} {1: <100}",
+            self.style.apply_to(i.to_string()+")"),
             self.style.apply_to(p.name.clone()));
 
             i+=1;
