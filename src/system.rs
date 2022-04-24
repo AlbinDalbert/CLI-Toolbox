@@ -47,7 +47,7 @@ impl System {
         }
 
         let inp = input("Pick program to launch:").parse::<usize>().unwrap_or(0);
-        self.programs[inp as usize].clone()
+        self.programs[inp+1].clone()
     }
 
     pub fn print(&mut self, s: &str){
