@@ -3,6 +3,7 @@
 /// Author (Github) : AlbinDalbert
 /// Date: 2022-04-24
 /// License: GPL-3.0
+/// path: src\lib.rs
 /// Description:
 ///     Tools for making a simple and good looking terminal interface.
 ///     Design primarily for programs with multiple sub-programs.

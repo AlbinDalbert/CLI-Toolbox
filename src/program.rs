@@ -7,7 +7,8 @@ use console::Style;
 #[derive(Clone)]
 pub struct Program {
     pub name: String,
-    run_func: fn(&mut Program),
+    pub run_func: fn(&mut Program),
+    pub functions: Vec<fn(&mut Program)>,
     style: Style,
     sleep: u64,
 }
