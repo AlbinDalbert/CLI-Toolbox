@@ -1,5 +1,4 @@
 // --------------------- Program -------------------------------------------------
-/// Language: rust
 /// Path: src\program_lib.rs
 
 use std::{thread, time};
@@ -43,7 +42,9 @@ impl Program {
     }
 
     pub fn err(&self, s: Option<&String>){
-        println!("{}", Style::new().red().apply_to(self.name.to_string()+&"Error> ".to_string()+s.unwrap_or(&"Error".to_string())));
+        println!("{}", Style::new().red().apply_to(self.name.to_string()+
+                                                    &"Error> ".to_string()+
+                                                    s.unwrap_or(&"Error".to_string())));
     }
 }
 

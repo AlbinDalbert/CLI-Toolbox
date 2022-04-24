@@ -1,11 +1,25 @@
 #![allow(dead_code)]
 
 /// Author (Github) : AlbinDalbert
+/// Date: 2022-04-24
+/// License: GPL-3.0
+/// Description:
+///     Tools for making a simple and good looking terminal interface.
+///     Design primarily for programs with multiple sub-programs.
+/// 
+///     The system is made of a name, a color, a style, a sleep time and a vector of programs.
+///     The system can be used to print messages, add programs and run them.
+///     The system can also be used to print error messages.
+///     The system can be used to get input from the user.
+/// 
+///     The Program struct is used to store the name, a run function, a style, a sleep time and a vector of sub-programs.
+///     The Program struct can be used to print messages.
+///     The Program struct can be used to print error messages.
+///     The Program struct can be used to run the run function.
 
 pub mod help;
 pub mod system;
 pub mod program;
-// pub mod menu;
 
 #[macro_use] extern crate text_io;
 use std::{thread, time};
@@ -39,10 +53,9 @@ fn set_color(style: Style, color: TermColor) -> Style{
     }
 }
 
-
 // -------------------------- Input --------------------------------
-// A function that askes the user to input a line, the string will then be returned.
-// TODO The color will be costumisable, and by default it will be yellow, 
+// A function that ask the user to input a line, the string will then be returned.
+// TODO The color will be customizable, and by default it will be yellow, 
 // TODO make a struct for input so it can be handled accordingly.
 // and it can be changed to be a given program.
 
@@ -58,7 +71,6 @@ pub fn input() -> String{
     }
     s
 }
-
 
 // ------------------------- Error -----------------------------
 /// Standardization for error messages. These will not be customizable.

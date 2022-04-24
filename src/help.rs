@@ -1,5 +1,5 @@
 ///----------------- Help ---------------------------------
-/// The help struct is used for making a costum help command for the progran.
+/// The help struct is used for making a custom help command for the program.
 /// The help is constructed of a Style and the content. 
 /// The color of the text is customizable from the enum TermColor, default is cyan.
 
