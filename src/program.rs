@@ -40,7 +40,7 @@ impl Program {
     
     pub fn run(&self){
         println!("{}", self.style.apply_to(self.name.to_string()+&" Running...".to_string()));
-        self.run_func;
+        let _ = &self.run_func;
     }
 
     pub fn err(&self, s: Option<&String>){
