@@ -1,6 +1,6 @@
 /// A general purpose menu for picking a function to run.
 /// 
-struct Menu {
+pub struct Menu {
     name: String,
     items: Vec<(String, fn())>,
 }
