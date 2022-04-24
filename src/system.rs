@@ -61,8 +61,8 @@ impl System {
         
     }
 
-    pub fn run_program(&mut self, program: Program){
-        let p = program;
+    pub fn run_program(&mut self, index: usize){
+        let p = self.programs[index].clone();
         p.run();
     }
 
