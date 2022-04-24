@@ -21,6 +21,7 @@
 pub mod help;
 pub mod system;
 pub mod program;
+pub mod menu;
 
 #[macro_use] extern crate text_io;
 use std::{thread, time};
