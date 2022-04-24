@@ -65,13 +65,13 @@ pub fn input(label: &str) -> String{
     println!("{}", style.apply_to(label));
     let s: String = read!("{}\n");
     println!("{}", style.apply_to("input> ".to_owned()+&s.to_string()));
-    let s = s.replace('\n', "");
+    let s = s.replace('\r', "");
     
     if s.eq("quit"){
         quit();
         return s;
     }
-    s.to_ascii_lowercase()
+    s
 }
 
 // ------------------------- Error -----------------------------
