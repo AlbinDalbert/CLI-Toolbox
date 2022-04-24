@@ -46,7 +46,7 @@ impl System {
             i+=1;
         }
 
-        let inp = input("Pick program to launch:").parse::<usize>().unwrap_or(666);
+        let inp = input("Pick program to launch:").parse::<usize>().unwrap();
         self.programs[inp].clone()
     }
 
