@@ -22,7 +22,7 @@ This is still in a very early stage, a lot of things have not been implemented a
 - [x]    Customizable for each instance of a `System` and `Program`
 - [x]    Program inherits optional attributes from `System` by default
 - [ ]    Programs can be executed via the `run()` function, (e.g. They are fundamentally linked together, not just for looks)
-- [ ]    Change the cargo name to something better and more telling
+- [x]    Change the cargo name to something better and more telling
 
 ### Optional Steps
 - [ ]   System can have sub-system
