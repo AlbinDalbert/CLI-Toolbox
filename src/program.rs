@@ -39,6 +39,7 @@ impl Program {
     }
     
     pub fn run(&self){
+        println!("{}", self.style.apply_to(self.name.to_string()+&" Running...".to_string()));
         self.run_func;
     }
 
