@@ -71,7 +71,7 @@ pub fn input(label: &str) -> String{
         quit();
         return s;
     }
-    s
+    s.to_ascii_lowercase()
 }
 
 // ------------------------- Error -----------------------------
