@@ -1,3 +1,5 @@
+use crate::input;
+
 /// A general purpose menu for picking a function to run.
 /// 
 pub struct Menu {
