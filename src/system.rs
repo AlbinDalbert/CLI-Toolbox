@@ -36,7 +36,7 @@ impl System {
     }
     
     pub fn menu(&self) -> Program{
-        let mut i: i16 = 1;
+        let mut i: i16 = 0;
         for p in &self.programs {
 
             println!("{0: <10} {1: <100}",
@@ -46,8 +46,8 @@ impl System {
             i+=1;
         }
 
-        let inp = input("Pick program to launch:").parse::<usize>().unwrap_or(0);
-        self.programs[inp-1].clone()
+        let inp = input("Pick program to launch:").parse::<usize>().unwrap_or(666);
+        self.programs[inp].clone()
     }
 
     pub fn print(&mut self, s: &str){
