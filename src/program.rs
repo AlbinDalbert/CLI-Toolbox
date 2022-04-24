@@ -39,7 +39,7 @@ impl Program {
     }
     
     pub fn run(&self){
-        (self.run_func);
+        self.run_func;
     }
 
     pub fn err(&self, s: Option<&String>){
