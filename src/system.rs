@@ -39,14 +39,14 @@ impl System {
         let mut i: i16 = 0;
         for p in &self.programs {
 
-            println!("{0: <10}) {1: <100}",
+            println!("{0): <10} {1: <100}",
             self.style.apply_to(i) ,
             self.style.apply_to(p.name.clone()));
 
             i+=1;
         }
 
-        let inp = input("Pick program to launch").parse::<i32>().unwrap_or(-1);
+        let inp = input("Pick program to launch:").parse::<usize>().unwrap_or(-1);
         self.programs[inp as usize].clone()
     }
 
