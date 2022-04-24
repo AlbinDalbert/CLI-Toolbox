@@ -62,8 +62,7 @@ impl System {
     }
 
     pub fn run_program(&mut self, index: usize){
-        let p = self.programs[index].clone();
-        p.run();
+        self.programs[index].run();
     }
 
     pub fn err(&self, s: Option<&String>){
