@@ -35,7 +35,7 @@ impl System {
         system
     }
     
-    pub fn menu(&self) -> usize{
+    pub fn menu(&self){
         let mut i: usize = 0;
         for p in &self.programs {
 
@@ -46,8 +46,8 @@ impl System {
             i+=1;
         }
         
-        input("Pick program to launch:").parse::<usize>().unwrap()
-        // self.programs[inp].clone()
+        let input = input("Pick program to launch:").parse::<usize>().unwrap();
+        self.programs[input].run();
     }
 
     pub fn print(&mut self, s: &str){
@@ -61,8 +61,8 @@ impl System {
         
     }
 
-    pub fn run_program(&mut self, index: usize){
-        self.programs[index].run();
+    pub fn run_program(&mut self, program: Program){
+        program.run();
     }
 
     pub fn err(&self, s: Option<&String>){
