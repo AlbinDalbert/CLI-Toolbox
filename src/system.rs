@@ -55,7 +55,7 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String, run_func:fn(&mut Program), sleep: Option<u64>){
+    pub fn add_program(&mut self, name: String, run_func:fn(), sleep: Option<u64>){
         
         self.programs.push(Program::new(name, run_func ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
         

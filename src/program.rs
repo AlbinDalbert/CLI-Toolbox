@@ -7,7 +7,7 @@ use console::Style;
 #[derive(Clone)]
 pub struct Program {
     pub name: String,
-    pub run_func: fn(&mut Program),
+    pub run_func: fn(),
     //pub functions: Vec<fn(&mut Program)>,
     style: Style,
     sleep: u64,
@@ -17,7 +17,7 @@ pub struct Program {
 impl Program {
 
     //create new program
-    pub fn new(name: String, run_func:fn(&mut Program) ,color: Option<crate::TermColor>, sleep: u64) -> Program{
+    pub fn new(name: String, run_func:fn() ,color: Option<crate::TermColor>, sleep: u64) -> Program{
         let mut program = Program {
             name,
             run_func,
