@@ -58,7 +58,6 @@ fn set_color(style: Style, color: TermColor) -> Style{
 // -------------------------- Input --------------------------------
 // A function that ask the user to input a line, the string will then be returned.
 // TODO The color will be customizable, and by default it will be yellow, 
-// TODO make a struct for input so it can be handled accordingly.
 // and it can be changed to be a given program.
 
 pub fn input(label: &str) -> String{
