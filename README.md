@@ -1,5 +1,5 @@
-# Terminal Toolbox
-Tools for making a simple and good looking terminal interface.
+# CLI Toolbox
+Tools for making a simple and good looking CLI.
 Design primarily for programs with multiple sub-programs.
 
 ## About
