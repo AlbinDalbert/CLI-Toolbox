@@ -8,7 +8,6 @@ use console::Style;
 pub struct Program {
     pub name: String,
     pub run_func: fn(),
-    //pub functions: Vec<fn(&mut Program)>,
     style: Style,
     sleep: u64,
 }

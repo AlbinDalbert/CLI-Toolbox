@@ -4,8 +4,12 @@ version = "0.0.5"
 edition = "2021"
 license = "GPL-3.0"
 
+[lib]
+crate-type = ["cdylib"]
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 text_io = "0.1.10"
 console = "0.15.0"
+gag = "1.0.0"

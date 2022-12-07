@@ -7,6 +7,8 @@
 use std::{thread, time};
 use std::str;
 use console::Style;
+use std::time::SystemTime;
+use gag::Gag;
 
 use crate::*;
 use crate::program::*;
@@ -36,18 +38,40 @@ impl System {
     }
     
     pub fn menu(&self){
-        let mut i: usize = 0;
-        for p in &self.programs {
-
-            println!("{0: <10} {1: <100}",
-            self.style.apply_to(i.to_string()+")"),
-            self.style.apply_to(p.name.clone()));
-
-            i+=1;
+        loop {
+            let mut i: usize = 0;
+            for p in &self.programs {
+    
+                println!("{0: <10} {1: <100}",
+                self.style.apply_to(i.to_string()+")"),
+                self.style.apply_to(p.name.clone()));
+    
+                i+=1;
+            }
+            
+            let input = input("Pick program to launch:");
+            if input == "bench" {
+                Self::run_bench(self);
+            } else {
+                let prog = input.parse::<usize>().unwrap();
+                if prog > i {
+                    println!("invalid input");
+                } else {
+                    self.programs[prog].run();
+                }    
+            }
         }
-        
-        let input = input("Pick program to launch:").parse::<usize>().unwrap();
-        self.programs[input].run();
+    }
+
+    fn run_bench(&self) {
+        for p in &self.programs {
+            print!("{} ... bench:\t\t",p.name.clone());
+            let start = SystemTime::now();
+            let mute = Gag::stdout().unwrap();
+            p.run();    
+            drop(mute);
+            println!("{} μs", start.elapsed().unwrap().as_micros());
+        }
     }
 
     pub fn print(&mut self, s: &str){
@@ -56,13 +80,7 @@ impl System {
     }
 
     pub fn add_program(&mut self, name: String, run_func: fn(), sleep: Option<u64>){
-        
         self.programs.push(Program::new(name, run_func ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
-        
-    }
-
-    pub fn run_program(&mut self, program: Program){
-        program.run();
     }
 
     pub fn err(&self, s: Option<&String>){
