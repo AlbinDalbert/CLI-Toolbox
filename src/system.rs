@@ -71,7 +71,7 @@ impl System {
             p.run();
             let res = start.elapsed().unwrap().as_micros();    
             drop(mute);
-            println!("{} ... bench: {} μs", p.name.clone(), res);
+            println!("{} ... bench: \t{} μs", p.name.clone(), res);   
             
         }
     }
