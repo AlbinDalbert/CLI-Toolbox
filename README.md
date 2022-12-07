@@ -1,5 +1,5 @@
-# Terminal Toolbox
-Tools for making a simple and good looking terminal interface.
+# CLI Toolbox
+Tools for making a simple and good looking CLI.
 Design primarily for programs with multiple sub-programs.
 
 ## About
@@ -11,7 +11,7 @@ Working more as a Map.
 ## Include It
 To use this crate. Under the dependencies in your Cargo.toml, just add this crate as followed
 
-```term_tools = { git = "https://github.com/AlbinDalbert/Terminal-Toolbox.git" }```
+```cli_toolbox = { git = "https://github.com/AlbinDalbert/CLI-Toolbox.git" }```
 
 Then just update your cargo the everything is up and running.
 
