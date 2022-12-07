@@ -65,13 +65,14 @@ impl System {
 
     fn run_bench(&self) {
         for p in &self.programs {
-            print!("{} ... bench:\t\t",p.name.clone());
+
             let mute = Gag::stdout().unwrap();
             let start = SystemTime::now();
             p.run();
             let res = start.elapsed().unwrap().as_micros();    
             drop(mute);
-            println!("{} μs", res);
+            println!("{} ... bench: {} μs", p.name.clone(), res);
+            
         }
     }
 
