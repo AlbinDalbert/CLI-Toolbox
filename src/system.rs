@@ -69,9 +69,9 @@ impl System {
             let mute = Gag::stdout().unwrap();
             let start = SystemTime::now();
             p.run();
-            let res = start.elapsed().unwrap().as_micros();    
+            let res = start.elapsed().unwrap().as_micros() as f64 / 1000.0;    
             drop(mute);
-            println!("{} ... bench: \t{} μs", p.name.clone(), res);   
+            println!("{} ... bench: \t{:.2} ms", p.name.clone(), res);   
             
         }
     }
