@@ -30,6 +30,7 @@ use std::process::exit;
 use console::Style;
 
 /// enum used in the function set_style_color() to check validity of input
+/// each value here should have a styles linked to it instead. This really doesn't utilize the language capabilities
 #[derive(Clone, Copy)]
 pub enum TermColor{
     Black,
@@ -42,6 +43,7 @@ pub enum TermColor{
     White,
 }
 
+// TODO: This could be refactored way better
 fn set_color(style: Style, color: TermColor) -> Style{
     match color {
         TermColor::Black => style.black(),
