@@ -26,4 +26,6 @@ This is still in a very early stage, a lot of things have not been implemented a
 - [x]    Make a generic `Menu` where each item has a `name` and `action`(function)
 
 ### Optional Steps
+- [x]   Benchmark, runs all programs in a system and times them.
+- [ ]   make the "help" command have auto-generated information about systems, programs and commands
 - [ ]   System can have sub-system

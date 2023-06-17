@@ -13,7 +13,7 @@ pub mod help {
         style: Style,
         content: String,
     }
-
+    // TODO: Make help have a default content will all systems, programs and commands.
     impl Help {
 
         pub fn new(color: Option<TermColor>) -> Help{
@@ -31,6 +31,5 @@ pub mod help {
             println!("{}", self.style.apply_to("/t---/t---Help---/t---/n"));
             println!("{}", self.style.apply_to(&self.content));
         }   
-        
     }
 }

@@ -4,6 +4,8 @@
 use std::{thread, time};
 use console::Style;
 
+use crate::{TermColor, set_color};
+
 #[derive(Clone)]
 pub struct Program {
     pub name: String,
@@ -16,16 +18,21 @@ pub struct Program {
 impl Program {
 
     //create new program
-    pub fn new(name: String, run_func: fn() ,color: Option<crate::TermColor>, sleep: u64) -> Program{
-        let mut program = Program {
+    pub fn new(name: String, run_func: fn() ,color: TermColor, sleep: u64) -> Program{
+        Program {
             name,
             run_func,
-            style: Style::new(),
+            style: set_color(Style::new(), color),
             sleep,
-        };
+        }
+    }
 
-        program.style = crate::set_color(program.style, color.unwrap_or(crate::TermColor::Green));
-        program
+    pub fn set_color(&mut self, color: TermColor) {
+        self.style = set_color(self.style.clone(), color);
+    }
+
+    pub fn set_sleep(&mut self, sleep: u64){
+        self.sleep = sleep;
     }
 
     pub fn print(&self,s: String) {

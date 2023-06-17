@@ -15,7 +15,7 @@ use crate::program::*;
 
 pub struct System {
     name: String,
-    color: TermColor,
+    color: TermColor, // Color doesn't set the color of the system, but it's used for programs to inherit the systems color.
     style: Style,
     sleep: u64,
     programs: Vec<Program>,
@@ -23,18 +23,23 @@ pub struct System {
 
 impl System {
 
-    pub fn new(name:String, color: Option<TermColor>, sleep: Option<u64>) -> System{
-
-        let mut system = System {
+    pub fn new(name:String) -> System{
+        System {
             name,
-            color: color.unwrap_or(TermColor::Green), 
-            style: Style::new(), 
-            sleep: sleep.unwrap_or(100), 
+            color: TermColor::Green, 
+            style: set_color(Style::new(), TermColor::Green), 
+            sleep: 100, 
             programs: Vec::new()
-        };
-    
-        system.style = crate::set_color(system.style, color.unwrap_or(TermColor::Green));
-        system
+        }
+    }
+
+    pub fn set_color(&mut self, color: TermColor) {
+        self.color = color;
+        self.style = set_color(self.style.clone(), color);
+    }
+
+    pub fn set_sleep(&mut self, sleep: u64){
+        self.sleep = sleep;
     }
     
     pub fn menu(&self){
@@ -63,7 +68,7 @@ impl System {
         }
     }
 
-    fn run_bench(&self) {
+    pub fn run_bench(&self) {
         for p in &self.programs {
 
             let mute = Gag::stdout().unwrap();
@@ -81,8 +86,8 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String, run_func: fn(), sleep: Option<u64>){
-        self.programs.push(Program::new(name, run_func ,Some(self.color) ,sleep.unwrap_or(self.sleep)));
+    pub fn add_program(&mut self, name: String, run_func: fn()){
+        self.programs.push(Program::new(name, run_func , self.color, self.sleep));
     }
 
     pub fn err(&self, s: Option<&String>){

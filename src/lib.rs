@@ -43,7 +43,6 @@ pub enum TermColor{
     White,
 }
 
-// TODO: This could be refactored way better
 fn set_color(style: Style, color: TermColor) -> Style{
     match color {
         TermColor::Black => style.black(),
