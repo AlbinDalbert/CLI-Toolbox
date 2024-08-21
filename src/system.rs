@@ -13,6 +13,11 @@ use gag::Gag;
 use crate::*;
 use crate::program::*;
 
+// ignore deprication warning in this file on all it's `self`
+#[deprecated(
+    since = "0.0.7",
+    note = "please use the `Sys` alias instead of `system::System`"
+)]
 pub struct System {
     name: String,
     color: TermColor, // Color doesn't set the color of the system, but it's used for programs to inherit the systems color.
@@ -88,6 +93,10 @@ impl System {
 
     pub fn add_program(&mut self, name: String, run_func: fn()){
         self.programs.push(Program::new(name, run_func , self.color, self.sleep));
+    }
+
+    pub fn append_program(&mut self, prog: Program){
+        self.programs.push(prog);
     }
 
     pub fn err(&self, s: Option<&String>){

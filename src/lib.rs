@@ -23,6 +23,10 @@ pub mod system;
 pub mod program;
 pub mod menu;
 
+pub use system::System as Sys;
+pub use program::Program as Prog;
+pub use menu::Menu as Menu;
+
 #[macro_use] extern crate text_io;
 use std::{thread, time};
 use std::str;
