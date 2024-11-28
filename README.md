@@ -15,6 +15,9 @@ To use this crate. Under the dependencies in your Cargo.toml, just add this crat
 
 Then just update your cargo the everything is up and running.
 
+## Example
+For example on how to use this, take a peek here https://github.com/AlbinDalbert/advent-of-code-2022
+
 ## Road-map
 This is still in a very early stage, a lot of things have not been implemented and/or works yet.
 
