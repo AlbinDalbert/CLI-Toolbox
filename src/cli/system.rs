@@ -42,29 +42,27 @@ impl System {
         self.sleep = sleep;
     }
     
-    pub fn menu(&self){
-        loop {
-            let mut i: usize = 0;
-            for p in &self.programs {
-    
-                println!("{0: <10} {1: <100}",
-                self.style.apply_to(i.to_string()+")"),
-                self.style.apply_to(p.name.clone()));
-    
-                i+=1;
-            }
-            
-            let input = input("Pick program to launch:");
-            if input == "bench" {
-                Self::run_bench(self);
+    pub fn menu(&self) {
+        let mut i: usize = 0;
+        for p in &self.programs {
+
+            println!("{0: <10} {1: <100}",
+            self.style.apply_to(i.to_string()+")"),
+            self.style.apply_to(p.name.clone()));
+
+            i+=1;
+        }
+        
+        let input = input("Pick program to launch:");
+        if input == "bench" {
+            Self::run_bench(self);
+        } else {
+            let prog = input.parse::<usize>().unwrap();
+            if prog > i {
+                println!("invalid input");
             } else {
-                let prog = input.parse::<usize>().unwrap();
-                if prog > i {
-                    println!("invalid input");
-                } else {
-                    self.programs[prog].run();
-                }    
-            }
+                self.programs[prog].run();
+            }    
         }
     }
 
