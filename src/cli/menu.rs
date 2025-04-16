@@ -1,11 +1,6 @@
 use crate::input;
 
 /// A general purpose menu for picking a function to run.
-// ignore deprication warning in this file on all it's `self`
-#[deprecated(
-    since = "0.0.7",
-    note = "please use the `Menu` alias instead of `menu::Menu`"
-)]
 pub struct Menu {
     name: String,
     items: Vec<Item>,

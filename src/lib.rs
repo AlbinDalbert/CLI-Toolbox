@@ -19,13 +19,8 @@
 ///     The Program struct can be used to run the run function.
 
 pub mod help;
-pub mod system;
-pub mod program;
-pub mod menu;
-
-pub use system::System as Sys;
-pub use program::Program as Prog;
-pub use menu::Menu as Menu;
+pub mod cli;
+pub use cli::{System, Program, Menu};
 
 #[macro_use] extern crate text_io;
 use std::{thread, time};

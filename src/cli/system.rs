@@ -11,13 +11,8 @@ use std::time::SystemTime;
 use gag::Gag;
 
 use crate::*;
-use crate::program::*;
+use crate::cli::program::*;
 
-// ignore deprication warning in this file on all it's `self`
-#[deprecated(
-    since = "0.0.7",
-    note = "please use the `Sys` alias instead of `system::System`"
-)]
 pub struct System {
     name: String,
     color: TermColor, // Color doesn't set the color of the system, but it's used for programs to inherit the systems color.

@@ -6,11 +6,6 @@ use console::Style;
 
 use crate::{TermColor, set_color};
 
-// ignore deprication warning in this file on all it's `self`
-#[deprecated(
-    since = "0.0.7",
-    note = "please use the `Prog` alias instead of `program::Program`"
-)]
 #[derive(Clone)]
 pub struct Program {
     pub name: String,
