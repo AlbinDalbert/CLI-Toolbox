@@ -3,27 +3,27 @@
 
 use std::{thread, time};
 use console::Style;
-
 use crate::{TermColor, set_color};
 
-#[derive(Clone)]
 pub struct Program {
     pub name: String,
-    pub run_func: fn(),
+    pub run_func: Box<dyn Fn()>,
     style: Style,
     sleep: u64,
+    silent: bool
 }
 
 // changing colors after initialization removed as it's unnecessary.
 impl Program {
 
     //create new program
-    pub fn new(name: String, run_func: fn() ,color: TermColor, sleep: u64) -> Program{
+    pub fn new(name: String, run_func: fn() ,color: TermColor, sleep: u64, silent: bool) -> Program{
         Program {
             name,
-            run_func,
+            run_func: Box::new(run_func),
             style: set_color(Style::new(), color),
             sleep,
+            silent,
         }
     }
 
@@ -33,6 +33,10 @@ impl Program {
 
     pub fn set_sleep(&mut self, sleep: u64){
         self.sleep = sleep;
+    }
+
+    pub fn set_silence(&mut self, silent: bool) {
+        self.silent = silent;
     }
 
     pub fn print(&self,s: String) {
@@ -45,7 +49,9 @@ impl Program {
     }
     
     pub fn run(&self){
-        println!("{}", self.style.apply_to(self.name.to_string()+&" Running...".to_string()));
+        if !self.silent {
+            println!("{}", self.style.apply_to(self.name.to_string()+&" Running...".to_string()));
+        }
         (self.run_func)();
     }
 

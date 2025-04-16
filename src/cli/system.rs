@@ -19,6 +19,7 @@ pub struct System {
     style: Style,
     sleep: u64,
     programs: Vec<Program>,
+    silent: bool,
 }
 
 impl System {
@@ -29,7 +30,8 @@ impl System {
             color: TermColor::Green, 
             style: set_color(Style::new(), TermColor::Green), 
             sleep: 100, 
-            programs: Vec::new()
+            programs: Vec::new(),
+            silent: false
         }
     }
 
@@ -41,8 +43,12 @@ impl System {
     pub fn set_sleep(&mut self, sleep: u64){
         self.sleep = sleep;
     }
+
+    pub fn set_silence(&mut self, silent: bool) {
+        self.silent = silent;
+    }
     
-    pub fn menu(&self) {
+    pub fn menu(&mut self) {
         let mut i: usize = 0;
         for p in &self.programs {
 
@@ -52,30 +58,40 @@ impl System {
 
             i+=1;
         }
-        
-        let input = input("Pick program to launch:");
-        if input == "bench" {
-            Self::run_bench(self);
-        } else {
-            let prog = input.parse::<usize>().unwrap();
-            if prog > i {
-                println!("invalid input");
+        loop {
+            let input = input("Pick program to launch:");
+            if input == "bench" {
+                Self::run_bench(self);
             } else {
-                self.programs[prog].run();
-            }    
-        }
+                let res = input.parse::<usize>();
+                let prog = match res {
+                    Ok(x) => x,
+                    Err(_) => {
+                        println!("invalid input");
+                        continue;
+                    }
+                };
+                
+                if prog >= self.programs.len() {
+                    println!("invalid input");
+                    continue;
+                } else {
+                    self.programs[prog].run();
+                    break;
+                }    
+            }
+        }   
     }
 
-    pub fn run_bench(&self) {
-        for p in &self.programs {
-
+    pub fn run_bench(&mut self) {
+        for p in &mut self.programs {
+            p.set_silence(true);
             let mute = Gag::stdout().unwrap();
             let start = SystemTime::now();
             p.run();
             let res = start.elapsed().unwrap().as_micros() as f64 / 1000.0;    
             drop(mute);
             println!("{} ... bench: \t{:.2} ms", p.name.clone(), res);   
-            
         }
     }
 
@@ -85,7 +101,7 @@ impl System {
     }
 
     pub fn add_program(&mut self, name: String, run_func: fn()){
-        self.programs.push(Program::new(name, run_func , self.color, self.sleep));
+        self.programs.push(Program::new(name, run_func , self.color, self.sleep, self.silent));
     }
 
     pub fn append_program(&mut self, prog: Program){
