@@ -48,7 +48,8 @@ impl System {
         self.silent = silent;
     }
     
-    pub fn menu(&mut self) {
+    pub fn menu(&mut self) -> Option<usize> {
+
         let mut i: usize = 0;
         for p in &self.programs {
 
@@ -58,39 +59,40 @@ impl System {
 
             i+=1;
         }
-        loop {
-            let input = input("Pick program to launch:");
-            if input == "bench" {
-                Self::run_bench(self);
-            } else {
-                let res = input.parse::<usize>();
-                let prog = match res {
-                    Ok(x) => x,
-                    Err(_) => {
-                        println!("invalid input");
-                        continue;
-                    }
-                };
-                
-                if prog >= self.programs.len() {
+        let input = input("Pick program to launch:");
+        if input == "bench" {
+            Self::run_bench(self);
+            return None;
+        } else {
+            let res = input.parse::<usize>();
+            let prog = match res {
+                Ok(x) => x,
+                Err(_) => {
                     println!("invalid input");
-                    continue;
-                } else {
-                    self.programs[prog].run();
-                    break;
-                }    
-            }
+                    return None;
+                }
+            };
+            
+            if prog >= self.programs.len() {
+                println!("invalid input");
+                return None;
+            } else {
+                self.programs[prog].run();
+                return Some(prog);
+            }    
         }   
     }
 
     pub fn run_bench(&mut self) {
         for p in &mut self.programs {
+            let prev_silent = p.get_silence();
             p.set_silence(true);
             let mute = Gag::stdout().unwrap();
             let start = SystemTime::now();
             p.run();
             let res = start.elapsed().unwrap().as_micros() as f64 / 1000.0;    
             drop(mute);
+            p.set_silence(prev_silent);
             println!("{} ... bench: \t{:.2} ms", p.name.clone(), res);   
         }
     }
@@ -100,7 +102,10 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program(&mut self, name: String, run_func: fn()){
+    pub fn add_program<F>(&mut self, name: String, run_func: F)
+    where
+        F: Fn() + 'static,
+    {
         self.programs.push(Program::new(name, run_func , self.color, self.sleep, self.silent));
     }
 

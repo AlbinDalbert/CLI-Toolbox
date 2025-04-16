@@ -32,11 +32,14 @@ impl Menu {
 
 struct Item {
     name: String,
-    func: fn(),
+    func: Box<dyn Fn()>,
 }
 
 impl Item {
     fn new(name: String, func: fn()) -> Item {
-        Item { name, func }
+        Item { 
+            name, 
+            func: Box::new(func) 
+        }
     }
 }
