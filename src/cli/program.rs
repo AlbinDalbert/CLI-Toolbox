@@ -5,16 +5,22 @@ use std::{thread, time};
 use console::Style;
 use crate::{TermColor, set_color};
 
+use super::ProgramBuilder;
+
 pub struct Program {
     pub name: String,
     pub run_func: Box<dyn Fn()>,
-    style: Style,
-    sleep: u64,
-    silent: bool
+    pub(crate) style: Style,
+    pub(crate) sleep: u64,
+    pub(crate) silent: bool
 }
 
 // changing colors after initialization removed as it's unnecessary.
 impl Program {
+
+    pub fn builder(name: impl Into<String>) -> ProgramBuilder {
+        ProgramBuilder::new(name)
+    }
 
     // create new program
     pub fn new<F: 'static + Fn()>(name: String, run_func: F ,color: TermColor, sleep: u64, silent: bool) -> Program{
