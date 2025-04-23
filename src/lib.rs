@@ -64,7 +64,7 @@ pub fn input(label: &str) -> String{
     let style: Style = Style::new().yellow();
     println!("{}", style.apply_to(label));
     let s: String = read!("{}\n");
-    println!("{}", style.apply_to("input> ".to_owned()+&s.to_string()));
+    println!("{}", style.apply_to(format!("input> {}", s)));
     let s = s.replace('\r', "");
     
     if s.eq("quit"){

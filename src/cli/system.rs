@@ -22,17 +22,17 @@ pub struct System {
     silent: bool,
 }
 
-impl System {
+pub struct SystemBuilder {
+    name: String,
+    color: TermColor,
+    sleep: u64,
+    silent: bool,
+    programs: Vec<Program>,
+}
 
-    pub fn new(name:String) -> System{
-        System {
-            name,
-            color: TermColor::Green, 
-            style: set_color(Style::new(), TermColor::Green), 
-            sleep: 100, 
-            programs: Vec::new(),
-            silent: false
-        }
+impl System {
+    pub fn builder(name: impl Into<String>) -> SystemBuilder {
+        SystemBuilder::new(name)
     }
 
     pub fn set_color(&mut self, color: TermColor) {
@@ -49,13 +49,11 @@ impl System {
     }
     
     pub fn menu(&mut self) -> Option<usize> {
-
         let mut i: usize = 0;
         for p in &self.programs {
-
             println!("{0: <10} {1: <100}",
             self.style.apply_to(i.to_string()+")"),
-            self.style.apply_to(p.name.clone()));
+            self.style.apply_to(p.name()));
 
             i+=1;
         }
@@ -93,7 +91,7 @@ impl System {
             let res = start.elapsed().unwrap().as_micros() as f64 / 1000.0;    
             drop(mute);
             p.set_silence(prev_silent);
-            println!("{} ... bench: \t{:.2} ms", p.name.clone(), res);   
+            println!("{} ... bench: \t{:.2} ms", p.name(), res);   
         }
     }
 
@@ -106,7 +104,13 @@ impl System {
     where
         F: Fn() + 'static,
     {
-        self.programs.push(Program::new(name, run_func , self.color, self.sleep, self.silent));
+        let program = Program::builder(name)
+            .action(run_func)
+            .color(self.color)
+            .sleep(self.sleep)
+            .silent(self.silent)
+            .build();
+        self.programs.push(program);
     }
 
     pub fn append_program(&mut self, prog: Program){
@@ -117,5 +121,62 @@ impl System {
         println!("{}", Style::new().red().apply_to(self.name.to_string()+
                                                     &"Error> ".to_string()+
                                                     s.unwrap_or(&"Error".to_string())));
+    }
+}
+
+impl SystemBuilder {
+    pub fn new(name: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            color: TermColor::Green,
+            sleep: 100,
+            silent: false,
+            programs: Vec::new(),
+        }
+    }
+
+    pub fn color(mut self, color: TermColor) -> Self {
+        self.color = color;
+        self
+    }
+
+    pub fn sleep(mut self, sleep: u64) -> Self {
+        self.sleep = sleep;
+        self
+    }
+
+    pub fn silent(mut self, silent: bool) -> Self {
+        self.silent = silent;
+        self
+    }
+
+    pub fn add_program<F>(mut self, name: String, run_func: F) -> Self
+    where
+        F: Fn() + 'static,
+    {
+        let program = Program::builder(name)
+            .action(run_func)
+            .color(self.color)
+            .sleep(self.sleep)
+            .silent(self.silent)
+            .build();
+        self.programs.push(program);
+        self
+    }
+
+    pub fn append_program(mut self, prog: Program) -> Self {
+        self.programs.push(prog);
+        self
+    }
+
+    pub fn build(self) -> System {
+        System {
+            name: self.name,
+            color: self.color,
+            style: set_color(Style::new(), self.color),
+            sleep: self.sleep,
+            silent: self.silent,
+            programs: self.programs,
+        }
     }
 }
