@@ -1,4 +1,4 @@
-use cli_toolbox::{System, Program, TermColor};
+use cli_toolbox::{System, Program, TermColor, ShellCommand};
 #[macro_use] extern crate text_io;
 
 fn main() {
@@ -61,10 +61,81 @@ fn main() {
         })
         .build();
 
+    // Add a dynamic shell command example
+    let dynamic_shell = Program::builder("dynamic-shell")
+        .use_defaults()
+        .description("Demonstrates dynamic shell command arguments with validation")
+        .tag("example")
+        .action(|| {
+            println!("Enter command to execute:");
+            let cmd: String = read!("{}\n");
+            let mut command = ShellCommand::new(cmd.trim());
+            
+            // Add arguments dynamically based on user input
+            println!("Enter arguments (one per line, empty line to finish):");
+            loop {
+                let input: String = read!("{}\n");
+                if input.trim().is_empty() {
+                    break;
+                }
+                command.add_arg(input.trim());
+            }
+
+            // Execute with validation
+            match command.execute() {
+                Ok(status) => {
+                    if status.success() {
+                        println!("Command executed successfully!");
+                    } else {
+                        println!("Command failed with status: {}", status);
+                    }
+                }
+                Err(e) => println!("Command error: {:?}", e),
+            }
+        })
+        .build();
+
+    // Add a shell command without validation example
+    let unsafe_shell = Program::builder("unsafe-shell")
+        .use_defaults()
+        .description("Demonstrates shell command without validation")
+        .tag("example")
+        .action(|| {
+            println!("Enter command to execute (no validation):");
+            let cmd: String = read!("{}\n");
+            let mut command = ShellCommand::new(cmd.trim())
+                .with_validation(false);
+            
+            // Add arguments dynamically based on user input
+            println!("Enter arguments (one per line, empty line to finish):");
+            loop {
+                let input: String = read!("{}\n");
+                if input.trim().is_empty() {
+                    break;
+                }
+                command.add_arg(input.trim());
+            }
+
+            // Execute without validation
+            match command.execute() {
+                Ok(status) => {
+                    if status.success() {
+                        println!("Command executed successfully!");
+                    } else {
+                        println!("Command failed with status: {}", status);
+                    }
+                }
+                Err(e) => println!("Command error: {:?}", e),
+            }
+        })
+        .build();
+
     // Add all programs to the system
     system.append_program(validate_program);
     system.append_program(calculator_program);
     system.append_program(tagged_program);
+    system.append_program(dynamic_shell);
+    system.append_program(unsafe_shell);
 
     // Show all available tags
     println!("Available tags: {:?}", system.all_tags());

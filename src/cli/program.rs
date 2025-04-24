@@ -51,6 +51,88 @@ pub struct ProgramBuilder {
     tags: Vec<String>,
 }
 
+pub struct ShellCommand {
+    base_command: String,
+    args: Vec<String>,
+    validate: bool,
+}
+
+#[derive(Debug)]
+pub enum ShellCommandError {
+    CommandNotFound(String),
+    NotExecutable(String),
+    ExecutionFailed(String),
+}
+
+impl ShellCommand {
+    pub fn new(base_command: impl Into<String>) -> Self {
+        Self {
+            base_command: base_command.into(),
+            args: Vec::new(),
+            validate: true,
+        }
+    }
+
+    pub fn add_arg(&mut self, arg: impl Into<String>) -> &mut Self {
+        self.args.push(arg.into());
+        self
+    }
+
+    pub fn with_validation(mut self, validate: bool) -> Self {
+        self.validate = validate;
+        self
+    }
+
+    fn validate_command(&self) -> Result<(), ShellCommandError> {
+        if !self.validate {
+            return Ok(());
+        }
+
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            if let Ok(metadata) = std::fs::metadata(&self.base_command) {
+                if !metadata.is_file() {
+                    return Err(ShellCommandError::NotExecutable(format!("{} is not a file", self.base_command)));
+                }
+                if metadata.permissions().mode() & 0o111 == 0 {
+                    return Err(ShellCommandError::NotExecutable(format!("{} is not executable", self.base_command)));
+                }
+            } else {
+                // Check if command exists in PATH
+                if let Err(_) = std::process::Command::new("which")
+                    .arg(&self.base_command)
+                    .output() {
+                    return Err(ShellCommandError::CommandNotFound(format!("Command {} not found", self.base_command)));
+                }
+            }
+        }
+
+        #[cfg(windows)]
+        {
+            // On Windows, we'll check if the command exists in PATH
+            if let Err(_) = std::process::Command::new("where")
+                .arg(&self.base_command)
+                .output() {
+                return Err(ShellCommandError::CommandNotFound(format!("Command {} not found", self.base_command)));
+            }
+        }
+
+        Ok(())
+    }
+
+    pub fn execute(&self) -> Result<std::process::ExitStatus, ShellCommandError> {
+        self.validate_command()?;
+
+        let mut command = std::process::Command::new(&self.base_command);
+        for arg in &self.args {
+            command.arg(arg);
+        }
+        
+        command.status()
+            .map_err(|e| ShellCommandError::ExecutionFailed(format!("Failed to execute command: {}", e)))
+    }
+}
 
 // changing colors after initialization removed as it's unnecessary.
 impl Program {
@@ -152,12 +234,30 @@ impl ProgramBuilder {
     }
 
     pub fn shell_command(mut self, cmd: impl Into<String>) -> Self {
-        let command = cmd.into();
-        let executor = DefaultCommandExecutor;
+        let command = ShellCommand::new(cmd);
         self.run_func = Some(Box::new(move || {
-            let status = executor.execute(&command);
-            if !status.success() {
-                println!("Command failed with status: {}", status);
+            match command.execute() {
+                Ok(status) => {
+                    if !status.success() {
+                        println!("Command failed with status: {}", status);
+                    }
+                }
+                Err(e) => println!("Command error: {:?}", e),
+            }
+        }));
+        self
+    }
+
+    pub fn dynamic_shell_command(mut self, cmd: impl Into<String>) -> Self {
+        let command = ShellCommand::new(cmd);
+        self.run_func = Some(Box::new(move || {
+            match command.execute() {
+                Ok(status) => {
+                    if !status.success() {
+                        println!("Command failed with status: {}", status);
+                    }
+                }
+                Err(e) => println!("Command error: {:?}", e),
             }
         }));
         self

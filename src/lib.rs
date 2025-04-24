@@ -29,6 +29,7 @@
 
 pub mod cli;
 pub use cli::{System, Program};
+pub use cli::program::ShellCommand;
 
 #[cfg(test)]
 mod tests;
