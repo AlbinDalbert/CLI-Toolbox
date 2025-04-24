@@ -54,25 +54,6 @@ fn set_color(style: Style, color: TermColor) -> Style{
     }
 }
 
-// -------------------------- Input --------------------------------
-// A function that ask the user to input a line, the string will then be returned.
-// TODO The color will be customizable, and by default it will be yellow, 
-// and it can be changed to be a given program.
-
-pub fn input(label: &str) -> String{
-    let style: Style = Style::new().yellow();
-    println!("{}", style.apply_to(label));
-    let s: String = read!("{}\n");
-    println!("{}", style.apply_to(format!("input> {}", s)));
-    let s = s.replace('\r', "");
-    
-    if s.eq("quit"){
-        quit();
-        return s;
-    }
-    s
-}
-
 // ------------------------- Error -----------------------------
 /// Standardization for error messages. These will not be customizable.
 pub fn err(s: Option<&String>){

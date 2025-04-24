@@ -72,8 +72,7 @@ impl System {
             }
         }
 
-        // Rest of your menu logic...
-        let input = input("Pick program to launch:");
+        let input = self.input("Pick program to launch:");
         if input == "bench" {
             Self::run_bench(self);
             return None;
@@ -188,6 +187,36 @@ impl System {
                 return Some(prog);
             }    
         }   
+    }
+
+    pub fn input(&self, label: &str) -> String {
+        println!("{}", self.style.apply_to(label));
+        let s: String = read!("{}\n");
+        println!("{}", self.style.apply_to(format!("{}> {}", self.name, s)));
+        let s = s.replace('\r', "");
+        
+        if s.eq("quit") {
+            quit();
+            return s;
+        }
+        s
+    }
+
+    pub fn input_with_validation<F>(&self, label: &str, validator: F) -> String 
+    where
+        F: Fn(&str) -> bool
+    {
+        loop {
+            let input = self.input(label);
+            if validator(&input) {
+                return input;
+            }
+            self.err(Some(&"Invalid input".to_string()));
+        }
+    }
+
+    pub fn input_number(&self, label: &str) -> Option<i32> {
+        self.input(label).parse().ok()
     }
 }
 
