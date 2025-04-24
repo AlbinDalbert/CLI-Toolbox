@@ -89,10 +89,6 @@ let program = Program::builder("My Program")
 - **Input Validation**: Built-in validation support
 - **Styling**: Customizable colors and formatting
 
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
 ## License
 
 This project is licensed under the Apache-2.0 License - see the LICENSE file for details.
