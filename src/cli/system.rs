@@ -216,6 +216,13 @@ impl System {
         }   
     }
 
+    /// Cleanly shuts down the system
+    pub fn quit(&self) {
+        println!("\n\n\t Shutting Down\n\n");
+        thread::sleep(time::Duration::from_millis(200));
+        std::process::exit(0);
+    }
+
     pub fn input(&self, label: &str) -> String {
         println!("{}", self.style.apply_to(label));
         let s: String = read!("{}\n");
@@ -223,8 +230,7 @@ impl System {
         let s = s.replace('\r', "");
         
         if s.eq("quit") {
-            quit();
-            return s;
+            self.quit();
         }
         s
     }

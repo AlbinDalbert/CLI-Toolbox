@@ -2,7 +2,7 @@
 
 /// Author (Github) : AlbinDalbert
 /// Date: 2022-04-24
-/// License: GPL-3.0
+/// License: Apache-2.0
 /// 
 /// # CLI Toolbox
 /// 
@@ -31,18 +31,14 @@ pub mod cli;
 pub use cli::{System, Program};
 pub use cli::program::ShellCommand;
 
-#[cfg(test)]
-mod tests;
-
 #[macro_use] extern crate text_io;
 use std::{thread, time};
 use std::process::exit;
 use console::Style;
 
-/// enum used in the function set_style_color() to check validity of input
-/// each value here should have a styles linked to it instead. This really doesn't utilize the language capabilities
+/// Color options for terminal output styling
 #[derive(Clone, Copy)]
-pub enum TermColor{
+pub enum TermColor {
     Black,
     Red,
     Green,
@@ -78,3 +74,6 @@ pub fn quit() {
     thread::sleep(time::Duration::from_millis(200));
     exit(0);
 }
+
+#[cfg(test)]
+mod tests;
