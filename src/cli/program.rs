@@ -113,6 +113,13 @@ impl ProgramBuilder {
         }
     }
 
+    pub fn use_defaults(self) -> Self {
+        self.color(TermColor::Green)
+            .sleep(0)
+            .silent(false)
+            .description("")
+    }
+
     pub fn action<F: Fn() + 'static>(mut self, f: F) -> Self {
         self.run_func = Some(Box::new(f));
         self
@@ -135,7 +142,9 @@ impl ProgramBuilder {
                 .status()
                 .expect("Failed to run command");
 
-            println!("Command exited with: {}", status);
+            if !status.success() {
+                println!("Command failed with status: {}", status);
+            }
         }));
         self
     }

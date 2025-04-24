@@ -30,6 +30,27 @@ pub struct SystemBuilder {
     programs: Vec<Program>,
 }
 
+// First, let's define our error types
+#[derive(Debug)]
+pub enum CliError {
+    InvalidInput(String),
+    CommandFailed(String),
+    ProgramNotFound(String),
+    // Add more as needed
+}
+
+impl std::fmt::Display for CliError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            CliError::InvalidInput(msg) => write!(f, "Invalid input: {}", msg),
+            CliError::CommandFailed(msg) => write!(f, "Command failed: {}", msg),
+            CliError::ProgramNotFound(msg) => write!(f, "Program not found: {}", msg),
+        }
+    }
+}
+
+impl std::error::Error for CliError {}
+
 impl System {
     pub fn builder(name: impl Into<String>) -> SystemBuilder {
         SystemBuilder::new(name)
@@ -132,7 +153,7 @@ impl System {
         self.programs.push(prog);
     }
 
-    pub fn err(&self, s: Option<&String>){
+    pub fn err(&self, s: Option<&String>) {
         println!("{}", Style::new().red().apply_to(self.name.to_string()+
                                                     &"Error> ".to_string()+
                                                     s.unwrap_or(&"Error".to_string())));
@@ -163,9 +184,7 @@ impl System {
                 self.style.apply_to(program.name()),
                 program.description());
         }
-
-        // Similar menu logic but using tagged_programs...
-        let input = input("Pick program to launch:");
+        let input = self.input("Pick program to launch:");
         if input == "bench" {
             Self::run_bench(self);
             return None;
@@ -218,6 +237,23 @@ impl System {
     pub fn input_number(&self, label: &str) -> Option<i32> {
         self.input(label).parse().ok()
     }
+
+    pub fn run_program(&self, index: usize) -> Result<(), CliError> {
+        if index >= self.programs.len() {
+            return Err(CliError::ProgramNotFound(format!("Index {} out of bounds", index)));
+        }
+        self.programs[index].run();
+        Ok(())
+    }
+
+    pub fn input_required(&self, label: &str) -> Result<String, CliError> {
+        let input = self.input(label);
+        if input.is_empty() {
+            Err(CliError::InvalidInput("Input cannot be empty".to_string()))
+        } else {
+            Ok(input)
+        }
+    }
 }
 
 
@@ -230,6 +266,12 @@ impl SystemBuilder {
             silent: false,
             programs: Vec::new(),
         }
+    }
+
+    pub fn use_defaults(self) -> Self {
+        self.color(TermColor::Green)
+            .sleep(100)
+            .silent(false)
     }
 
     pub fn color(mut self, color: TermColor) -> Self {
