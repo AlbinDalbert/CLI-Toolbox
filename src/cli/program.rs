@@ -12,6 +12,7 @@ pub struct Program {
     sleep: u64,
     silent: bool,
     description: String,
+    tags: Vec<String>,
 }
 
 pub struct ProgramBuilder {
@@ -21,6 +22,7 @@ pub struct ProgramBuilder {
     sleep: u64,
     silent: bool,
     description: String,
+    tags: Vec<String>,
 }
 
 
@@ -82,6 +84,19 @@ impl Program {
     pub fn description(&self) -> &str {
         &self.description
     }
+
+    pub fn tags(&self) -> &Vec<String> {
+        &self.tags
+    }
+
+    pub fn get_tags(&self) -> Vec<String> {
+        self.tags.clone()
+    }
+
+    pub fn has_tag(&self, tag: &str) -> bool {
+        self.tags.iter().any(|t| t == tag)
+    }
+    
 }
 
 
@@ -94,6 +109,7 @@ impl ProgramBuilder {
             sleep: 0,
             silent: false,
             description: String::new(),
+            tags: Vec::new(),
         }
     }
 
@@ -105,11 +121,20 @@ impl ProgramBuilder {
     pub fn shell_command(mut self, cmd: impl Into<String>) -> Self {
         let command = cmd.into();
         self.run_func = Some(Box::new(move || {
+            #[cfg(unix)]
             let status = std::process::Command::new("sh")
                 .arg("-c")
                 .arg(&command)
                 .status()
                 .expect("Failed to run command");
+
+            #[cfg(windows)]
+            let status = std::process::Command::new("cmd")
+                .arg("/C")
+                .arg(&command)
+                .status()
+                .expect("Failed to run command");
+
             println!("Command exited with: {}", status);
         }));
         self
@@ -135,6 +160,24 @@ impl ProgramBuilder {
         self
     }
 
+    pub fn tags(mut self, tags: Vec<String>) -> Self {
+        self.tags = tags;
+        self
+    }
+
+    pub fn tag(mut self, tag: impl Into<String>) -> Self {
+        self.tags.push(tag.into());
+        self
+    }
+
+    pub fn has_tag(&self, tag: &str) -> bool {
+        self.tags.iter().any(|t| t == tag)
+    }
+
+    pub fn get_tags(&self) -> &Vec<String> {
+        &self.tags
+    }
+
     pub fn build(self) -> Program {
         Program {
             name: self.name,
@@ -143,6 +186,7 @@ impl ProgramBuilder {
             sleep: self.sleep,
             silent: self.silent,
             description: self.description,
+            tags: self.tags,
         }
     }
 }

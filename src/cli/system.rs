@@ -48,15 +48,31 @@ impl System {
         self.silent = silent;
     }
     
-    pub fn menu(&mut self) -> Option<usize> {
-        let mut i: usize = 0;
-        for p in &self.programs {
-            println!("{0: <10} {1: <100}",
-            self.style.apply_to(i.to_string()+")"),
-            self.style.apply_to(p.name()));
-
-            i+=1;
+    pub fn show_help(&self) {
+        println!("{}", self.style.apply_to(format!("=== {} Help ===", self.name)));
+        for program in &self.programs {
+            println!("{}", self.style.apply_to(format!("\n{}", program.name())));
+            println!("  Description: {}", program.description());
+            if !program.tags().is_empty() {
+                println!("  Tags: {}", program.tags().join(", "));
+            }
         }
+    }
+
+    pub fn menu(&mut self) -> Option<usize> {
+        // Show all programs with their descriptions and tags
+        for (i, program) in self.programs.iter().enumerate() {
+            println!("{0: <5} {1: <30} {2}",
+                self.style.apply_to(format!("{})", i)),
+                self.style.apply_to(program.name()),
+                program.description());
+            
+            if !program.tags().is_empty() {
+                println!("     Tags: {}", program.tags().join(", "));
+            }
+        }
+
+        // Rest of your menu logic...
         let input = input("Pick program to launch:");
         if input == "bench" {
             Self::run_bench(self);
@@ -122,7 +138,59 @@ impl System {
                                                     &"Error> ".to_string()+
                                                     s.unwrap_or(&"Error".to_string())));
     }
+
+    pub fn programs_with_tag(&self, tag: &str) -> Vec<&Program> {
+        self.programs.iter()
+            .filter(|p| p.has_tag(tag))
+            .collect()
+    }
+
+    pub fn all_tags(&self) -> Vec<String> {
+        let mut tags: Vec<String> = self.programs.iter()
+            .flat_map(|p| p.get_tags())
+            .collect();
+        tags.sort_unstable();
+        tags.dedup();
+        tags
+    }
+
+    pub fn show_tagged_menu(&mut self, tag: &str) -> Option<usize> {
+        let tagged_programs: Vec<_> = self.programs_with_tag(tag).into_iter().collect();
+        
+        println!("{}", self.style.apply_to(format!("=== Programs tagged with '{}' ===", tag)));
+        for (i, program) in tagged_programs.iter().enumerate() {
+            println!("{0: <5} {1: <30} {2}",
+                self.style.apply_to(format!("{})", i)),
+                self.style.apply_to(program.name()),
+                program.description());
+        }
+
+        // Similar menu logic but using tagged_programs...
+        let input = input("Pick program to launch:");
+        if input == "bench" {
+            Self::run_bench(self);
+            return None;
+        } else {
+            let res = input.parse::<usize>();
+            let prog = match res {
+                Ok(x) => x,
+                Err(_) => {
+                    println!("invalid input");
+                    return None;
+                }
+            };
+            
+            if prog >= tagged_programs.len() {
+                println!("invalid input");
+                return None;
+            } else {
+                tagged_programs[prog].run();
+                return Some(prog);
+            }    
+        }   
+    }
 }
+
 
 impl SystemBuilder {
     pub fn new(name: impl Into<String>) -> Self {

@@ -18,9 +18,8 @@
 ///     The Program struct can be used to print error messages.
 ///     The Program struct can be used to run the run function.
 
-pub mod help;
 pub mod cli;
-pub use cli::{System, Program, Menu};
+pub use cli::{System, Program};
 
 #[macro_use] extern crate text_io;
 use std::{thread, time};
