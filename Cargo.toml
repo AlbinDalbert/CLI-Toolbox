@@ -1,12 +1,15 @@
 [package]
 name = "cli_toolbox"
-version = "0.3.1-beta"
+version = "0.3.2-beta"
 edition = "2021"
 license = "Apache-2.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-text_io = "0.1.10"
-console = "0.15.0"
+text_io = "0.1.13"
+console = "0.15.11"
 gag = "1.0.0"
+
+[dev-dependencies]
+mockall = "0.13.1"

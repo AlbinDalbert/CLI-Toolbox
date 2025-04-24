@@ -3,27 +3,38 @@
 /// Author (Github) : AlbinDalbert
 /// Date: 2022-04-24
 /// License: GPL-3.0
-/// path: src\lib.rs
-/// Description:
-///     Tools for making a simple and good looking terminal interface.
-///     Design primarily for programs with multiple sub-programs.
 /// 
-///     The system is made of a name, a color, a style, a sleep time and a vector of programs.
-///     The system can be used to print messages, add programs and run them.
-///     The system can also be used to print error messages.
-///     The system can be used to get input from the user.
+/// # CLI Toolbox
 /// 
-///     The Program struct is used to store the name, a run function, a style, a sleep time and a vector of sub-programs.
-///     The Program struct can be used to print messages.
-///     The Program struct can be used to print error messages.
-///     The Program struct can be used to run the run function.
+/// A library for creating simple and good looking terminal interfaces.
+/// Designed primarily for programs with multiple sub-programs.
+/// 
+/// ## Features
+/// - System management with name, color, style, and sleep time
+/// - Program management with run functions and metadata
+/// - Tag-based organization
+/// - Cross-platform shell command execution
+/// - Error handling and input validation
+/// 
+/// ## Example
+/// ```
+/// use cli_toolbox::{System, Program, TermColor};
+/// 
+/// let mut system = System::builder("My Tool")
+///     .use_defaults()
+///     .build();
+/// 
+/// system.add_program_with_inheritance("hello".to_string(), || println!("Hello, world!"));
+/// ```
 
 pub mod cli;
 pub use cli::{System, Program};
 
+#[cfg(test)]
+mod tests;
+
 #[macro_use] extern crate text_io;
 use std::{thread, time};
-use std::str;
 use std::process::exit;
 use console::Style;
 

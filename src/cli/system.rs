@@ -68,6 +68,14 @@ impl System {
     pub fn set_silence(&mut self, silent: bool) {
         self.silent = silent;
     }
+
+    pub fn get_sleep(&self) -> u64 {
+        self.sleep
+    }
+
+    pub fn get_silence(&self) -> bool {
+        self.silent
+    }
     
     pub fn show_help(&self) {
         println!("{}", self.style.apply_to(format!("=== {} Help ===", self.name)));
@@ -136,7 +144,7 @@ impl System {
         thread::sleep(time::Duration::from_millis(self.sleep));
     }
 
-    pub fn add_program<F>(&mut self, name: String, run_func: F)
+    pub fn add_program_with_inheritance<F>(&mut self, name: String, run_func: F)
     where
         F: Fn() + 'static,
     {
@@ -254,6 +262,14 @@ impl System {
             Ok(input)
         }
     }
+
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    pub fn programs(&self) -> &[Program] {
+        &self.programs
+    }
 }
 
 
@@ -289,7 +305,7 @@ impl SystemBuilder {
         self
     }
 
-    pub fn add_program<F>(mut self, name: String, run_func: F) -> Self
+    pub fn add_program_with_inheritance<F>(mut self, name: String, run_func: F) -> Self
     where
         F: Fn() + 'static,
     {

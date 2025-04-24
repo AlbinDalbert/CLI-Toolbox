@@ -5,6 +5,32 @@ use std::{thread, time};
 use console::Style;
 use crate::{TermColor, set_color};
 
+pub trait CommandExecutor {
+    fn execute(&self, cmd: &str) -> std::process::ExitStatus;
+}
+
+pub struct DefaultCommandExecutor;
+
+impl CommandExecutor for DefaultCommandExecutor {
+    fn execute(&self, cmd: &str) -> std::process::ExitStatus {
+        #[cfg(unix)]
+        let status = std::process::Command::new("sh")
+            .arg("-c")
+            .arg(cmd)
+            .status()
+            .expect("Failed to run command");
+
+        #[cfg(windows)]
+        let status = std::process::Command::new("cmd")
+            .arg("/C")
+            .arg(cmd)
+            .status()
+            .expect("Failed to run command");
+
+        status
+    }
+}
+
 pub struct Program {
     name: String,
     run_func: Box<dyn Fn()>,
@@ -127,21 +153,9 @@ impl ProgramBuilder {
 
     pub fn shell_command(mut self, cmd: impl Into<String>) -> Self {
         let command = cmd.into();
+        let executor = DefaultCommandExecutor;
         self.run_func = Some(Box::new(move || {
-            #[cfg(unix)]
-            let status = std::process::Command::new("sh")
-                .arg("-c")
-                .arg(&command)
-                .status()
-                .expect("Failed to run command");
-
-            #[cfg(windows)]
-            let status = std::process::Command::new("cmd")
-                .arg("/C")
-                .arg(&command)
-                .status()
-                .expect("Failed to run command");
-
+            let status = executor.execute(&command);
             if !status.success() {
                 println!("Command failed with status: {}", status);
             }
