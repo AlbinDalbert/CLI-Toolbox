@@ -1,7 +1,7 @@
 // --------------------- Program -------------------------------------------------
 /// Path: src\program_lib.rs
 
-use std::{thread, time};
+use std::{clone, thread, time};
 use console::Style;
 use crate::{TermColor, set_color};
 
@@ -35,6 +35,7 @@ pub struct Program {
     name: String,
     run_func: Box<dyn Fn()>,
     style: Style,
+    color: TermColor,
     sleep: u64,
     silent: bool,
     description: String,
@@ -142,6 +143,7 @@ impl Program {
     }
 
     pub fn set_color(&mut self, color: TermColor) {
+        self.color = color;
         self.style = set_color(self.style.clone(), color);
     }
 
@@ -153,8 +155,16 @@ impl Program {
         self.silent = silent;
     }
 
-    pub fn get_color(&self) -> Style {
-        return self.style.clone();
+    pub fn set_name(&mut self, name: String) {
+        self.name = name;
+    }
+
+    pub fn set_description(&mut self, description: String) {
+        self.description = description;
+    }
+
+    pub fn get_color(&self) -> TermColor {
+        return self.color;
     }
 
     pub fn get_sleep(&self) -> u64 {
@@ -163,6 +173,14 @@ impl Program {
 
     pub fn get_silence(&self) -> bool {
         return self.silent;
+    }
+
+    pub fn get_name(&self) -> String {
+        return self.name.clone();
+    }
+
+    pub fn get_description(&self) -> String {
+        return self.description.clone();
     }
 
     pub fn print(&self, message: &str) {
@@ -306,6 +324,7 @@ impl ProgramBuilder {
             name: self.name,
             run_func: self.run_func.expect("No action set for Program"),
             style: set_color(Style::new(), self.color),
+            color: self.color,
             sleep: self.sleep,
             silent: self.silent,
             description: self.description,

@@ -34,10 +34,11 @@ pub use cli::program::ShellCommand;
 #[macro_use] extern crate text_io;
 use std::{thread, time};
 use std::process::exit;
+use std::fmt;
 use console::Style;
 
 /// Color options for terminal output styling
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum TermColor {
     Black,
     Red,
@@ -47,6 +48,22 @@ pub enum TermColor {
     Magenta,
     Cyan,
     White,
+}
+
+impl fmt::Display for TermColor {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let color_str = match self {
+            TermColor::Black => "Black",
+            TermColor::Red => "Red",
+            TermColor::Green => "Green",
+            TermColor::Yellow => "Yellow",
+            TermColor::Blue => "Blue",
+            TermColor::Magenta => "Magenta",
+            TermColor::Cyan => "Cyan",
+            TermColor::White => "White",
+        };
+        write!(f, "{}", color_str)
+    }
 }
 
 fn set_color(style: Style, color: TermColor) -> Style{

@@ -141,8 +141,9 @@ fn main() {
     println!("Available tags: {:?}", system.all_tags());
 
     // Show programs with a specific tag
-    system.show_tagged_menu("example");
+    system.display();
+    system.menu();
+    system.menu_with_tags_filter(vec!["demo".to_string()]);
 
     // Run the main menu
-    system.menu();
 } 

@@ -1,6 +1,6 @@
 [package]
 name = "cli_toolbox"
-version = "0.3.3-beta"
+version = "0.3.4-beta"
 edition = "2021"
 license = "Apache-2.0"
 

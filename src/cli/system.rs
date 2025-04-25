@@ -88,41 +88,29 @@ impl System {
         }
     }
 
-    pub fn menu(&mut self) -> Option<usize> {
-        // Show all programs with their descriptions and tags
-        for (i, program) in self.programs.iter().enumerate() {
-            println!("{0: <5} {1: <30} {2}",
-                self.style.apply_to(format!("{})", i)),
-                self.style.apply_to(program.name()),
-                program.description());
-            
-            if !program.tags().is_empty() {
-                println!("     Tags: {}", program.tags().join(", "));
-            }
-        }
 
-        let input = self.input("Pick program to launch:");
-        if input == "bench" {
-            Self::run_bench(self);
-            return None;
-        } else {
-            let res = input.parse::<usize>();
-            let prog = match res {
-                Ok(x) => x,
-                Err(_) => {
-                    println!("invalid input");
-                    return None;
-                }
-            };
-            
-            if prog >= self.programs.len() {
-                println!("invalid input");
-                return None;
-            } else {
-                self.programs[prog].run();
-                return Some(prog);
-            }    
-        }   
+    pub fn menu_complex_filter(&mut self, filter: Option<Box<dyn Fn(&Program) -> bool>>) -> Option<usize>{
+        let filtered_indices: Vec<usize> = match filter {
+            Some(f) => self.programs.iter().enumerate().filter(|(_, p)| f(p)).map(|(i, _)| i).collect(),
+            None => self.programs.iter().enumerate().map(|(i, _)| i).collect(),
+        };
+
+        return print_menu(self, filtered_indices)
+    }
+
+    pub fn menu_with_tags_filter(&mut self, tags: Vec<String>) -> Option<usize> {
+        let filtered_indices: Vec<usize> = self.programs.iter().enumerate()
+            .filter(|(_, p)| tags.iter().all(|tag| p.tags().contains(tag)))
+            .map(|(i, _)| i)
+            .collect();
+        print_menu(self, filtered_indices);
+        None
+    }
+    
+
+    pub fn menu(&mut self) -> Option<usize> {
+        let indices = self.programs.iter().enumerate().map(|(i, _)| i).collect();
+        return print_menu(self, indices);
     }
 
     pub fn run_bench(&mut self) {
@@ -180,40 +168,6 @@ impl System {
         tags.sort_unstable();
         tags.dedup();
         tags
-    }
-
-    pub fn show_tagged_menu(&mut self, tag: &str) -> Option<usize> {
-        let tagged_programs: Vec<_> = self.programs_with_tag(tag).into_iter().collect();
-        
-        println!("{}", self.style.apply_to(format!("=== Programs tagged with '{}' ===", tag)));
-        for (i, program) in tagged_programs.iter().enumerate() {
-            println!("{0: <5} {1: <30} {2}",
-                self.style.apply_to(format!("{})", i)),
-                self.style.apply_to(program.name()),
-                program.description());
-        }
-        let input = self.input("Pick program to launch:");
-        if input == "bench" {
-            Self::run_bench(self);
-            return None;
-        } else {
-            let res = input.parse::<usize>();
-            let prog = match res {
-                Ok(x) => x,
-                Err(_) => {
-                    println!("invalid input");
-                    return None;
-                }
-            };
-            
-            if prog >= tagged_programs.len() {
-                println!("invalid input");
-                return None;
-            } else {
-                tagged_programs[prog].run();
-                return Some(prog);
-            }    
-        }   
     }
 
     /// Cleanly shuts down the system
@@ -276,6 +230,26 @@ impl System {
     pub fn programs(&self) -> &[Program] {
         &self.programs
     }
+
+    pub fn display(&self) {
+        println!("System Name: {}", self.name);
+        println!("Color: {:?}", self.color.to_string());
+        println!("Style: {:?}", self.style);
+        println!("Sleep: {}", self.sleep);
+        println!("Silent: {}", self.silent);
+        println!("Programs:");
+
+        for (index, program) in self.programs.iter().enumerate() {
+            println!("  Program {}:", index + 1);
+            println!("    Name: {}", program.get_name());
+            println!("    Color: {:?}", program.get_color());
+            println!("    Sleep: {}", program.get_sleep());
+            println!("    Silent: {}", program.get_silence());
+            println!("    Description: {}", program.get_description());
+            println!("    Tags: {:?}", program.get_tags());
+        }
+    }
+
 }
 
 
@@ -338,6 +312,42 @@ impl SystemBuilder {
             sleep: self.sleep,
             silent: self.silent,
             programs: self.programs,
+        }
+    }
+}
+
+fn print_menu(sys: &mut System, indices: Vec<usize>) -> Option<usize>{
+    for i in indices {
+        println!("{0: <5} {1: <30} {2}",
+            sys.style.apply_to(format!("{})", i)),
+            sys.style.apply_to(sys.programs[i].name()),
+            sys.programs[i].description());
+        
+        if !sys.programs[i].tags().is_empty() {
+            println!("     Tags: {}",Style::new().italic().apply_to(sys.programs[i].tags().join(", ")));
+        }
+    }
+
+    let input = sys.input("Pick program to launch:");
+    if input == "bench" {
+        sys.run_bench();
+        return None;
+    } else {
+        let res = input.parse::<usize>();
+        let prog = match res {
+            Ok(x) => x,
+            Err(_) => {
+                println!("invalid input");
+                return None;
+            }
+        };
+        
+        if prog >= sys.programs.len() {
+            println!("invalid input");
+            return None;
+        } else {
+            sys.programs[prog].run();
+            return Some(prog);
         }
     }
 }

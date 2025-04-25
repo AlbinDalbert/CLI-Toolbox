@@ -1,4 +1,4 @@
-use cli_toolbox::{System, Program, TermColor};
+use cli_toolbox::{System, Program};
 
 fn main() {
     // Create a system with default settings
