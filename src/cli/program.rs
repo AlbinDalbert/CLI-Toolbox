@@ -1,7 +1,7 @@
 // --------------------- Program -------------------------------------------------
 /// Path: src\program_lib.rs
 
-use std::{clone, thread, time};
+use std::{thread, time};
 use console::Style;
 use crate::{TermColor, set_color};
 
